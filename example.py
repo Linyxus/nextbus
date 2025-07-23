@@ -2,17 +2,24 @@
 # -*- coding:utf-8 -*-
 import sys
 import os
-picdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'pic')
-libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
-if os.path.exists(libdir):
-    sys.path.append(libdir)
-from rich import print
+# picdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'pic')
+# libdir = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'lib')
+# if os.path.exists(libdir):
+#     sys.path.append(libdir)
+resource_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'resources')
+# from rich import print
+from rich.logging import RichHandler
 
 import logging
 from vendor.waveshare_epd import epd2in9b_V4
 import time
 from PIL import Image,ImageDraw,ImageFont
-import traceback
+# import traceback
+
+FORMAT = "%(message)s"
+logging.basicConfig(
+  level="NOTSET", format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
+)
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -28,8 +35,10 @@ try:
     
     # Drawing on the image
     # logging.info("Drawing")    
-    # font24 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 24)
-    # font18 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 18)
+    font_dir = os.path.join(resource_dir, 'MapleMono-NF-CN-Regular.ttf')
+    logging.info(f"font_dir: {font_dir}")
+    font24 = ImageFont.truetype(font_dir, 24)
+    font18 = ImageFont.truetype(font_dir, 18)
 
     # logging.info("read bmp file")
     # HBlackimage = Image.open(os.path.join(picdir, '2in9bc-b.bmp'))
@@ -38,33 +47,33 @@ try:
     # time.sleep(2)
     
     # Drawing on the Horizontal image
-    logging.info("Drawing on the Horizontal image...") 
-    # epd.init_Fast()
-    HBlackimage = Image.new('1', (epd.height, epd.width), 255)  # 298*126
-    HRYimage = Image.new('1', (epd.height, epd.width), 255)  # 298*126  ryimage: red or yellow image  
-    drawblack = ImageDraw.Draw(HBlackimage)
-    drawry = ImageDraw.Draw(HRYimage)
-    # drawblack.text((10, 0), 'hello world', font = font24, fill = 0)
-    # drawblack.text((10, 20), '2.9inch e-Paper b V4', font = font24, fill = 0)
-    # drawblack.text((150, 0), u'微雪电子', font = font24, fill = 0)    
-    drawblack.line((20, 50, 70, 100), fill = 0)
-    drawblack.line((70, 50, 20, 100), fill = 0)
-    drawblack.rectangle((20, 50, 70, 100), outline = 0)    
-    drawry.line((165, 50, 165, 100), fill = 0)
-    drawry.line((140, 75, 190, 75), fill = 0)
-    drawry.arc((140, 50, 190, 100), 0, 360, fill = 0)
-    drawry.rectangle((80, 50, 130, 100), fill = 0)
-    drawry.chord((200, 50, 250, 100), 0, 360, fill = 0)
-    blackBuffer = epd.getbuffer(HBlackimage)
-    redBuffer = epd.getbuffer(HRYimage)
-    # print(f"blackBuffer: {blackBuffer}")
-    # print(f"redBuffer: {redBuffer}")
-    input("Ready to display ...")
-    epd.display(blackBuffer, redBuffer)
-    # time.sleep(2)
-    input("Press Enter to continue...")
-    epd.display_Base_color(0xFF)
-    input("Press Enter to continue...")
+    # logging.info("Drawing on the Horizontal image...") 
+    # # epd.init_Fast()
+    # HBlackimage = Image.new('1', (epd.height, epd.width), 255)  # 298*126
+    # HRYimage = Image.new('1', (epd.height, epd.width), 255)  # 298*126  ryimage: red or yellow image  
+    # drawblack = ImageDraw.Draw(HBlackimage)
+    # drawry = ImageDraw.Draw(HRYimage)
+    # # drawblack.text((10, 0), 'hello world', font = font24, fill = 0)
+    # # drawblack.text((10, 20), '2.9inch e-Paper b V4', font = font24, fill = 0)
+    # # drawblack.text((150, 0), u'微雪电子', font = font24, fill = 0)    
+    # drawblack.line((20, 50, 70, 100), fill = 0)
+    # drawblack.line((70, 50, 20, 100), fill = 0)
+    # drawblack.rectangle((20, 50, 70, 100), outline = 0)    
+    # drawry.line((165, 50, 165, 100), fill = 0)
+    # drawry.line((140, 75, 190, 75), fill = 0)
+    # drawry.arc((140, 50, 190, 100), 0, 360, fill = 0)
+    # drawry.rectangle((80, 50, 130, 100), fill = 0)
+    # drawry.chord((200, 50, 250, 100), 0, 360, fill = 0)
+    # blackBuffer = epd.getbuffer(HBlackimage)
+    # redBuffer = epd.getbuffer(HRYimage)
+    # # print(f"blackBuffer: {blackBuffer}")
+    # # print(f"redBuffer: {redBuffer}")
+    # input("... example 1 ...")
+    # epd.display(blackBuffer, redBuffer)
+    # # time.sleep(2)
+    # # input("Press Enter to continue...")
+    # # epd.display_Base_color(0xFF)
+    # # input("Press Enter to continue...")
 
     '''
     # If you didn't use the display_Base() function to refresh the image before,
@@ -75,23 +84,26 @@ try:
     # epd.display_Base_color(0xFF)
     '''
     # partial update
-    # logging.info("5.show time")
-    # epd.init()
-    # epd.display_Base_color(0xFF)
-    # HBlackimage = Image.new('1', (epd.height, epd.width), 255)
-    # drawblack = ImageDraw.Draw(HBlackimage)
-    # num = 0
-    # while (True):
-    #     drawblack.rectangle((10, 10, 120, 50), fill = 255)
-    #     drawblack.text((10, 10), time.strftime('%H:%M:%S'), font = font24, fill = 0)
-    #     newimage = HBlackimage.crop([10, 10, 120, 50])
-    #     HBlackimage.paste(newimage, (10,10))  
-    #     epd.display_Partial(epd.getbuffer(HBlackimage),10, epd.height - 120, 50, epd.height - 10)
-    #     num = num + 1
-    #     if(num == 10):
-    #         break
+    logging.info("5.show time")
+    epd.init()
+    epd.display_Base_color(0xFF)
+    HBlackimage = Image.new('1', (epd.height, epd.width), 255)
+    drawblack = ImageDraw.Draw(HBlackimage)
+    num = 0
+    input("... show time ...")
+    while (True):
+        drawblack.rectangle((10, 10, 120, 50), fill = 255)
+        drawblack.text((10, 10), time.strftime('%H:%M:%S'), font = font18, fill = 0)
+        drawblack.text((10, 20), "hello world", font = font18, fill = 0)
+        newimage = HBlackimage.crop([10, 10, 120, 50])
+        HBlackimage.paste(newimage, (10,10))  
+        epd.display_Partial(epd.getbuffer(HBlackimage),10, epd.height - 120, 50, epd.height - 10)
+        num = num + 1
+        if(num == 10):
+            break
     
     logging.info("Clear...")
+    input("... clear and exit ...")
     epd.init()
     epd.Clear()
     

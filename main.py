@@ -18,6 +18,8 @@ def test1():
   rdraw = ImageDraw.Draw(red_image)
   bdraw.text((10, 0), "hello world", font = font, fill = 0)
   rdraw.text((10, 30), "你好，世界", font = font, fill = 0)
+  rdraw.text((150, 0), "你好，世界", font = font, fill = 0)
+  bdraw.text((150, 30), "Bonjour!~~", font = font, fill = 0)
   bbuf = epd.getbuffer(black_image)
   rbuf = epd.getbuffer(red_image)
   # epd.init_Fast()
@@ -45,5 +47,6 @@ if __name__ == "__main__":
   # input("Running test2... Press Enter to continue")
   # test2()
 
+  input("Clean and close ...")
   epd.Clear_Fast()
   epd.sleep()
